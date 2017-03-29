@@ -49,6 +49,7 @@
       </dependencies>
     </profile>
     <profile>
+      <activation>true</activation>
       <id>hadoop-2</id>
       <dependencies>
         <dependency>

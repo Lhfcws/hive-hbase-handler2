@@ -1,5 +1,6 @@
 package org.apache.hadoop.hive.hbase.tree.hbase;
 
+import com.google.gson.Gson;
 import org.apache.hadoop.hive.hbase.ColumnMappings;
 import org.apache.hadoop.hive.hbase.HBaseSerDe;
 
@@ -16,6 +17,7 @@ public class HBaseTreeParserBuilder {
     public HBaseTreeParser build(HBaseSerDe serDe) throws Exception {
         HBaseTreeParser parser = new HBaseTreeParser();
         List<String> fields = serDe.getHBaseSerdeParam().getColumnNames();
+        System.out.println(new Gson().toJson(serDe.getHBaseSerdeParam().getSerdeParams()));
         ColumnMappings.ColumnMapping[] cms = serDe.getHBaseSerdeParam().getColumnMappings().getColumnsMapping();
 
         int i = -1;
