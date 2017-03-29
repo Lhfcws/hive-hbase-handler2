@@ -17,19 +17,19 @@ public class HBaseTreeParserBuilder {
     public HBaseTreeParser build(HBaseSerDe serDe) throws Exception {
         HBaseTreeParser parser = new HBaseTreeParser();
         List<String> fields = serDe.getHBaseSerdeParam().getColumnNames();
-        System.out.println(new Gson().toJson(serDe.getHBaseSerdeParam().getSerdeParams()));
         ColumnMappings.ColumnMapping[] cms = serDe.getHBaseSerdeParam().getColumnMappings().getColumnsMapping();
 
         int i = -1;
-        for (;i< fields.size(); i++) {
+        for (String f : fields) {
             i++;
-            String f = fields.get(i);
             ColumnMappings.ColumnMapping cm = cms[i];
             if (cm.isHbaseRowKey())
                 parser.fieldMap.put(f, new HBaseField(cm.getColumnName()));
             else
                 parser.fieldMap.put(f, new HBaseField(cm.getColumnName(), cm.getQualifierName()));
         }
+
+        System.out.println(parser.fieldMap);
 
         return parser;
     }
