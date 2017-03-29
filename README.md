@@ -3,8 +3,10 @@
 
 ## Sargable
 
-link to my blog
-link to wiki
+Sargable = Search ARGument ABLE
+
++ [Sargable Intro (Chinese)](http://www.cnblogs.com/lhfcws/p/6611830.html)
++ [Sargable Wikipedia](https://en.wikipedia.org/wiki/Sargable)
 
 ### Current sargable operators (1.2.1.0)
 
