@@ -23,7 +23,7 @@ public class HBaseStorageHandler2 extends HBaseStorageHandler {
     public DecomposedPredicate decomposePredicate(JobConf jobConf, Deserializer deserializer, ExprNodeDesc predicate) {
         Debugger.printExprNodeDesc(console, TreeUtil.ROOT_NAME, predicate);
         // disable cacheblocks in scan, improve performance
-        jobConf.set(HBaseSerDe.HBASE_SCAN_CACHEBLOCKS, "false");
+//        jobConf.set(HBaseSerDe.HBASE_SCAN_CACHEBLOCKS, "false");
 
         // if user has set his own keyfactory, then use it. Otherwise use the sargable one.
         if (jobConf.get(HBaseSerDe.HBASE_COMPOSITE_KEY_FACTORY) != null) {
@@ -32,7 +32,11 @@ public class HBaseStorageHandler2 extends HBaseStorageHandler {
             return keyFactory.decomposePredicate(jobConf, deserializer, predicate);
         } else {
             // change default predicate decomposer
-            return new TreePredicateDecomposer(console).decomposePredicate(jobConf, deserializer, predicate);
+            long startTime = System.currentTimeMillis();
+            DecomposedPredicate decomposedPredicate = new TreePredicateDecomposer(console).decomposePredicate(jobConf, deserializer, predicate);
+            long endTime = System.currentTimeMillis();
+            console.logInfo("decomposePredicate cost time (ms): " + (endTime - startTime));
+            return decomposedPredicate;
         }
     }
 }
