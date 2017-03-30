@@ -9,8 +9,10 @@ import org.apache.hadoop.hive.hbase.tree.HiveTreeBuilder;
 import org.apache.hadoop.hive.hbase.tree.hbase.HBaseTreeParser;
 import org.apache.hadoop.hive.hbase.tree.hbase.HBaseTreeParserBuilder;
 import org.apache.hadoop.hive.hbase.tree.node.OpNode;
+import org.apache.hadoop.hive.ql.exec.Utilities;
 import org.apache.hadoop.hive.ql.metadata.HiveStoragePredicateHandler;
 import org.apache.hadoop.hive.ql.plan.ExprNodeDesc;
+import org.apache.hadoop.hive.ql.plan.TableScanDesc;
 import org.apache.hadoop.hive.ql.session.SessionState;
 import org.apache.hadoop.hive.serde2.Deserializer;
 import org.apache.hadoop.mapred.JobConf;
@@ -34,7 +36,7 @@ public class TreePredicateDecomposer implements HiveStoragePredicateHandler {
     @Override
     public DecomposedPredicate decomposePredicate(JobConf jobConf, Deserializer deserializer, ExprNodeDesc predicate) {
         HBaseSerDe serDe = (HBaseSerDe) deserializer;
-        DecomposedPredicate decomposedPredicate = new DecomposedPredicate();
+//        DecomposedPredicate decomposedPredicate = new DecomposedPredicate();
 
         try {
             HiveTreeBuilder treeBuilder = new HiveTreeBuilder();
@@ -43,7 +45,8 @@ public class TreePredicateDecomposer implements HiveStoragePredicateHandler {
             Filter filter = treeParser.parse(root);
             if (filter != null) {
                 HBaseScanRange range = parseFilter(filter);
-                decomposedPredicate.pushedPredicateObject = range;
+//                decomposedPredicate.pushedPredicateObject = range;
+                jobConf.set(TableScanDesc.FILTER_OBJECT_CONF_STR, Utilities.serializeObject(range));
                 Debugger.print(console, "[PushDown] " + new Gson().toJson(range));
             }
         } catch (Exception e) {
@@ -51,7 +54,7 @@ public class TreePredicateDecomposer implements HiveStoragePredicateHandler {
             console.printError(Debugger.e2s(e));
         }
 
-        return decomposedPredicate;
+        return null;
     }
 
     public HBaseScanRange parseFilter(Filter filter) {
