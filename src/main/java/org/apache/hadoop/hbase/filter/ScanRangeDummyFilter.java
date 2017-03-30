@@ -6,6 +6,7 @@ import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -147,4 +148,11 @@ public class ScanRangeDummyFilter extends Filter {
         return false;
     }
 
+    @Override
+    public String toString() {
+        return "ScanRangeDummyFilter (" +
+                "startRow=" + Arrays.toString(startRow) +
+                ", stopRow=" + Arrays.toString(stopRow) +
+                ')';
+    }
 }

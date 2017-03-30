@@ -1,10 +1,10 @@
 package org.apache.hadoop.hive.hbase.tree.hbase;
 
-import com.google.gson.Gson;
 import org.apache.hadoop.hive.hbase.ColumnMappings;
 import org.apache.hadoop.hive.hbase.HBaseSerDe;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * org.apache.hadoop.hive.hbase.tree.hbase.HBaseTreeParserBuilder
@@ -31,6 +31,12 @@ public class HBaseTreeParserBuilder {
 
         System.out.println(parser.fieldMap);
 
+        return parser;
+    }
+
+    public HBaseTreeParser build(Map<String, HBaseField> mp) throws Exception {
+        HBaseTreeParser parser = new HBaseTreeParser();
+        parser.fieldMap.putAll(mp);
         return parser;
     }
 }

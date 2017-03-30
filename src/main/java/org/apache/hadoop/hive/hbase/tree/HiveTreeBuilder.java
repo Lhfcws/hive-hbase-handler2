@@ -6,6 +6,7 @@ import org.apache.hadoop.hive.hbase.tree.node.Node;
 import org.apache.hadoop.hive.hbase.tree.node.OpNode;
 import org.apache.hadoop.hive.ql.plan.ExprNodeDesc;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,13 +73,13 @@ public class HiveTreeBuilder {
         } else {
             OpNode opNode = new OpNode(hiveNode.getExprString());
 //             for test
-//            List<String> childrenExprs = new ArrayList<>();
-//            for (ExprNodeDesc nodeDesc : hiveNode.getChildren()) {
-//                childrenExprs.add(nodeDesc.getExprString());
-//            }
-//            String operator = findParentOp(opNode.getExpression(), childrenExprs);
+            List<String> childrenExprs = new ArrayList<>();
+            for (ExprNodeDesc nodeDesc : hiveNode.getChildren()) {
+                childrenExprs.add(nodeDesc.getExprString());
+            }
+            String operator = findParentOp(opNode.getExpression(), childrenExprs);
 
-            String operator = findParentOp(hiveNode);
+//            String operator = findParentOp(hiveNode);
             if (operator != null) {
                 opNode.setOperator(operator);
                 if (sargableParser.isLogicOp(operator)) {

@@ -99,10 +99,9 @@ public class HBaseTreeParser extends TreeParser<Filter> {
 
     @Override
     public Filter parseSargableOp(OpNode opNode) {
-        SingleColumnValueFilter filter = null;
         final String op = opNode.getOperator();
         if (compareOpMap.containsKey(op)) {
-            TreeUtil.parseBinaryOp(opNode, new Function2<String, Object, Filter>() {
+            return TreeUtil.parseBinaryOp(opNode, new Function2<String, Object, Filter>() {
                 @Override
                 public Filter apply(String field, Object val) {
                     HBaseField hbField = fieldMap.get(field);
