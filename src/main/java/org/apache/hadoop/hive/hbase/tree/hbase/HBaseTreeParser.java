@@ -6,6 +6,7 @@ import org.apache.hadoop.hive.hbase.tree.function.Function2;
 import org.apache.hadoop.hive.hbase.tree.function.Pair;
 import org.apache.hadoop.hive.hbase.tree.node.Node;
 import org.apache.hadoop.hive.hbase.tree.node.OpNode;
+import org.apache.hadoop.hive.ql.udf.UDFRegExp;
 
 import java.util.HashMap;
 import java.util.List;
@@ -165,6 +166,45 @@ public class HBaseTreeParser extends TreeParser<Filter> {
                     return dummyFilter;
                 }
             }
+        } else if (op.equals("is null")) {
+            Pair<String, List<Object>> pair = TreeUtil.simpleExtractFieldNVals(opNode);
+            String field = pair.getFirst();
+            HBaseField hbField = fieldMap.get(field);
+            if (hbField == null)
+                return null;
+
+            SingleColumnValueFilter filter = new SingleColumnValueFilter(
+                    hbField.getColumnFamilyBytes(), hbField.getQualifierBytes(),
+                    CompareFilter.CompareOp.EQUAL, new NullComparator()
+            );
+            return filter;
+        } else if (op.equals("is not null")) {
+            Pair<String, List<Object>> pair = TreeUtil.simpleExtractFieldNVals(opNode);
+            String field = pair.getFirst();
+            HBaseField hbField = fieldMap.get(field);
+            if (hbField == null)
+                return null;
+
+            SingleColumnValueFilter filter = new SingleColumnValueFilter(
+                    hbField.getColumnFamilyBytes(), hbField.getQualifierBytes(),
+                    CompareFilter.CompareOp.NOT_EQUAL, new NullComparator()
+            );
+            return filter;
+        } else if (op.equals(UDFRegExp.class.getSimpleName())) {
+            Pair<String, List<Object>> pair = TreeUtil.simpleExtractFieldNVals(opNode);
+            String field = pair.getFirst();
+            HBaseField hbField = fieldMap.get(field);
+            if (hbField == null)
+                return null;
+
+            Object val1 = TreeUtil.safeget(pair.getSecond(), 0);
+            String regexp = String.valueOf(val1);
+
+            SingleColumnValueFilter filter = new SingleColumnValueFilter(
+                    hbField.getColumnFamilyBytes(), hbField.getQualifierBytes(),
+                    CompareFilter.CompareOp.EQUAL, new RegexStringComparator(regexp)
+            );
+            return filter;
         }
 
         return null;

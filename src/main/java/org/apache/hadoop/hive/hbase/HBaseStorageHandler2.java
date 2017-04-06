@@ -12,6 +12,11 @@ import org.apache.hadoop.mapred.JobConf;
 /**
  * org.apache.hadoop.hive.hbase.HBaseStorageHandler2
  *
+ * Compared to default one, this handler supports not-rowkey fields conditions optimized.
+ * It reduces the network cost to transfer the data we don't cared, but in some way it increase the calculations in hbase.
+ * NOTICE that full scan of a large hbase table is quite slow, so it is not recommended to totally replace customized codes with hive sql yet.
+ *
+ * TODO: support hive is_null & regex
  * @author lhfcws
  * @since 2017/3/24
  */
@@ -23,7 +28,7 @@ public class HBaseStorageHandler2 extends HBaseStorageHandler {
     public DecomposedPredicate decomposePredicate(JobConf jobConf, Deserializer deserializer, ExprNodeDesc predicate) {
         Debugger.printExprNodeDesc(console, TreeUtil.ROOT_NAME, predicate);
         // disable cacheblocks in scan, improve performance
-//        jobConf.set(HBaseSerDe.HBASE_SCAN_CACHEBLOCKS, "false");
+        jobConf.set(HBaseSerDe.HBASE_SCAN_CACHEBLOCKS, "false");
 
         // if user has set his own keyfactory, then use it. Otherwise use the sargable one.
         if (jobConf.get(HBaseSerDe.HBASE_COMPOSITE_KEY_FACTORY) != null) {

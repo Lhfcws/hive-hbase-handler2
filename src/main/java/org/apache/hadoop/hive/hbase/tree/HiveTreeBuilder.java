@@ -77,9 +77,9 @@ public class HiveTreeBuilder {
             for (ExprNodeDesc nodeDesc : hiveNode.getChildren()) {
                 childrenExprs.add(nodeDesc.getExprString());
             }
-            String operator = findParentOp(opNode.getExpression(), childrenExprs);
+//            String operator = findParentOp(opNode.getExpression(), childrenExprs);
 
-//            String operator = findParentOp(hiveNode);
+            String operator = findOp(hiveNode);
             if (operator != null) {
                 opNode.setOperator(operator);
                 if (sargableParser.isLogicOp(operator)) {
@@ -132,23 +132,36 @@ public class HiveTreeBuilder {
 
         if (parentExpr.toLowerCase().contains("between") && parentExpr.toLowerCase().contains("and")) {
             return "between";
-        } else
+        } else {
+            parentExpr = findUdfOp(parentExpr);
             return sargableParser.cleanSynonymOp(parentExpr);
+        }
     }
 
     /**
-     * 从 "id > 1" 等这样的语句中抽取出操作符
      *
      * @param exprNodeDesc
      * @return
      */
-    protected String findParentOp(ExprNodeDesc exprNodeDesc) {
+    protected String findOp(ExprNodeDesc exprNodeDesc) {
         String udfName = TreeUtil.getGenericUDFNameFromExprDesc(exprNodeDesc);
         if (udfName == null)
             return null;
 
         String[] arr = udfName.split("\\.");
         udfName = arr[arr.length - 1];
+        String op = sargableParser.sargableOpUDFClassMapping.get(udfName);
+        if (op == null)
+            return udfName;
+        else
+            return sargableParser.cleanSynonymOp(op);
+    }
+
+    /**
+     *
+     * @return
+     */
+    protected String findUdfOp(String udfName) {
         String op = sargableParser.sargableOpUDFClassMapping.get(udfName);
         if (op == null)
             return udfName;
