@@ -9,10 +9,10 @@ import java.util.*;
 /**
  * org.apache.hadoop.hbase.filter.NotFilter
  * TODO implement a not filter?
+ *
  * @author lhfcws
  * @since 2017/3/27
  */
-@Deprecated
 public class NotFilter extends Filter {
     protected Filter filter;
 
@@ -27,17 +27,30 @@ public class NotFilter extends Filter {
 
     @Override
     public boolean filterRowKey(byte[] bytes, int i, int i1) throws IOException {
-        return !filterRowKey(bytes, i, i1);
+        return !filter.filterRowKey(bytes, i, i1);
     }
 
     @Override
     public boolean filterAllRemaining() throws IOException {
-        return !filter.filterAllRemaining();
+        return filter.filterAllRemaining();
     }
 
     @Override
     public ReturnCode filterKeyValue(Cell cell) throws IOException {
-        return null;
+        ReturnCode code = this.filter.filterKeyValue(cell);
+
+        if (code == ReturnCode.INCLUDE)
+            code = ReturnCode.SKIP;
+        else if (code == ReturnCode.INCLUDE_AND_NEXT_COL)
+            code = ReturnCode.NEXT_COL;
+        else if (code == ReturnCode.NEXT_ROW)
+            code = ReturnCode.INCLUDE_AND_NEXT_COL;
+        else if (code == ReturnCode.SKIP)
+            code = ReturnCode.INCLUDE;
+        else if (code == ReturnCode.NEXT_ROW)
+            code = ReturnCode.INCLUDE;
+
+        return code;
     }
 
     @Override
@@ -90,7 +103,15 @@ public class NotFilter extends Filter {
         return filter.toByteArray();
     }
 
-    boolean areSerializedFieldsEqual(Filter filter) {
-        return false;
+    boolean areSerializedFieldsEqual(Filter other) {
+        if (other == this) {
+            return true;
+        }
+        if (!(other instanceof NotFilter)) {
+            return false;
+        }
+        NotFilter o = (NotFilter) other;
+        return this.filter == o.filter;
     }
+
 }
