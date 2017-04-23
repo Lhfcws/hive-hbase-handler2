@@ -77,4 +77,50 @@ public class TestTreeParser {
         Filter filter = parser.parse(opNode);
         System.out.println(filter);
     }
+
+    @Test
+    public void testOr() throws Exception {
+        FakeExprNodeDesc root0 = new FakeExprNodeDesc(FakeExprNodeDesc.GENERICFUNC, "boolean", "(update_date >= '2016010100')");
+        FakeExprNodeDesc fieldNode0 = new FakeExprNodeDesc(FakeExprNodeDesc.COL, "boolean", "update_date");
+        FakeExprNodeDesc valueNode0 = new FakeExprNodeDesc(FakeExprNodeDesc.CONSTANT, "string", "'2016010100'");
+        root0.addChild(fieldNode0, valueNode0);
+
+        FakeExprNodeDesc root1 = new FakeExprNodeDesc(FakeExprNodeDesc.GENERICFUNC, "boolean", "(pk between '77777' and '1000000')");
+        FakeExprNodeDesc fieldNode1 = new FakeExprNodeDesc(FakeExprNodeDesc.COL, "boolean", "pk");
+        FakeExprNodeDesc valueNode1 = new FakeExprNodeDesc(FakeExprNodeDesc.CONSTANT, "string", "'77777'");
+        FakeExprNodeDesc valueNode1_2 = new FakeExprNodeDesc(FakeExprNodeDesc.CONSTANT, "string", "'1000000'");
+        root1.addChild(fieldNode1, valueNode1, valueNode1_2);
+
+        FakeExprNodeDesc root = new FakeExprNodeDesc(FakeExprNodeDesc.GENERICFUNC, "boolean", "(update_date >= '2016010100') OR (pk between '77777' and '1000000')");
+        root.addChild(root0, root1);
+
+        HBaseTreeParser parser = new HBaseTreeParserBuilder().build(mp);
+        HiveTreeBuilder builder = new HiveTreeBuilder();
+        OpNode opNode = builder.build(root);
+        Filter filter = parser.parse(opNode);
+        System.out.println(filter);
+    }
+
+    @Test
+    public void testNot() throws Exception {
+        FakeExprNodeDesc root0 = new FakeExprNodeDesc(FakeExprNodeDesc.GENERICFUNC, "boolean", "(update_date >= '2016010100')");
+        FakeExprNodeDesc fieldNode0 = new FakeExprNodeDesc(FakeExprNodeDesc.COL, "boolean", "update_date");
+        FakeExprNodeDesc valueNode0 = new FakeExprNodeDesc(FakeExprNodeDesc.CONSTANT, "string", "'2016010100'");
+        root0.addChild(fieldNode0, valueNode0);
+
+        FakeExprNodeDesc root1 = new FakeExprNodeDesc(FakeExprNodeDesc.GENERICFUNC, "boolean", "(pk between '77777' and '1000000')");
+        FakeExprNodeDesc fieldNode1 = new FakeExprNodeDesc(FakeExprNodeDesc.COL, "boolean", "pk");
+        FakeExprNodeDesc valueNode1 = new FakeExprNodeDesc(FakeExprNodeDesc.CONSTANT, "string", "'77777'");
+        FakeExprNodeDesc valueNode1_2 = new FakeExprNodeDesc(FakeExprNodeDesc.CONSTANT, "string", "'1000000'");
+        root1.addChild(fieldNode1, valueNode1, valueNode1_2);
+
+        FakeExprNodeDesc root = new FakeExprNodeDesc(FakeExprNodeDesc.GENERICFUNC, "boolean", "(update_date >= '2016010100') NOT (pk between '77777' and '1000000')");
+        root.addChild(root0, root1);
+
+        HBaseTreeParser parser = new HBaseTreeParserBuilder().build(mp);
+        HiveTreeBuilder builder = new HiveTreeBuilder();
+        OpNode opNode = builder.build(root);
+        Filter filter = parser.parse(opNode);
+        System.out.println(filter);
+    }
 }

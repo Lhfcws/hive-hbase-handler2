@@ -71,6 +71,10 @@ public class HBaseTreeParser extends TreeParser<Filter> {
     public Filter parseLogicOp(OpNode logicOp) {
         String op = logicOp.getOperator();
         FilterList filterList = new FilterList();
+        if ("or".equals(op)) {
+            filterList = new FilterList(FilterList.Operator.MUST_PASS_ONE);
+        }
+        int i = 0;
         for (Node node : logicOp.getChildren()) {
             if (node instanceof OpNode) {
                 OpNode n = (OpNode) node;
@@ -81,16 +85,19 @@ public class HBaseTreeParser extends TreeParser<Filter> {
                     makeFilter(filterList, childRes);
                 } else if ("or".equals(op)) {
                     // pass
-                    return null;
+                    makeFilter(filterList, childRes);
                 } else if ("not".equals(op)) {
 //                    NotFilter notFilter = new NotFilter(childRes);
 //                    return notFilter;
                     // pass
-                    return null;
+                    if (i++ <= 0) {
+                        makeFilter(filterList, childRes);
+                    } else {
+                        makeFilter(filterList, new NotFilter(childRes));
+                    }
                 }
             }
         }
-
         if (isEmpty(filterList))
             return null;
         else
@@ -188,5 +195,18 @@ public class HBaseTreeParser extends TreeParser<Filter> {
         return filterList;
     }
 
+    private static Filter makeOrFilter(FilterList filterList, Filter toAdd) {
+        if (toAdd == null)
+            return filterList;
+        if (toAdd instanceof FilterList) {
+            for (Filter f : ((FilterList) toAdd).getFilters()) {
+                filterList.addFilter(f);
+            }
+        } else {
+            filterList.addFilter(toAdd);
+        }
+
+        return filterList;
+    }
 
 }

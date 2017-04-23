@@ -114,4 +114,10 @@ public class NotFilter extends Filter {
         return this.filter == o.filter;
     }
 
+    @Override
+    public String toString() {
+        return "NotFilter (" +
+                "Origin Filter: " + filter +
+                ")";
+    }
 }
