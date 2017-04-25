@@ -1,6 +1,5 @@
 package org.apache.hadoop.hive.hbase.tree;
 
-import org.apache.hadoop.hive.ql.exec.FunctionRegistry;
 import org.apache.hadoop.hive.ql.plan.ExprNodeDesc;
 import org.apache.hadoop.hive.ql.session.SessionState;
 
@@ -25,8 +24,7 @@ public class Debugger {
                     + "exprString: " + exprNodeDesc.getExprString() + "\n"
                     + "typeInfo: " + exprNodeDesc.getTypeInfo() + "\n"
                     + "typeString: " + exprNodeDesc.getTypeString() + "\n"
-                    + "cols: " + exprNodeDesc.getCols() + "\n"
-                    + "isNot: " + FunctionRegistry.isOpNot(exprNodeDesc);
+                    + "cols: " + exprNodeDesc.getCols() + "\n";
             return s;
         }
         return "";

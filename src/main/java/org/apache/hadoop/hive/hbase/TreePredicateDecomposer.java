@@ -53,6 +53,7 @@ public class TreePredicateDecomposer implements HiveStoragePredicateHandler {
 //                decomposedPredicate.pushedPredicateObject = range;
                 jobConf.set(TableScanDesc.FILTER_OBJECT_CONF_STR, Utilities.serializeObject(range));
                 Debugger.print(console, "[PushDown] " + new Gson().toJson(range));
+                Debugger.print(console, "[Filter] " + filter);
             }
         } catch (Exception e) {
             e.printStackTrace();
