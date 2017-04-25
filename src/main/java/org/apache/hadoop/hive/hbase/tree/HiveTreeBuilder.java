@@ -86,7 +86,6 @@ public class HiveTreeBuilder {
 //            String operator = findParentOp(opNode.getExpression(), childrenExprs);
 
             String operator = findOp(hiveNode);
-            Debugger.print(console, "[nowParent] " + nowParent + "\n[hiveNode] " + hiveNode + "\n[operator] " + operator);
 
             if (operator != null) {
                 opNode.setOperator(operator);
