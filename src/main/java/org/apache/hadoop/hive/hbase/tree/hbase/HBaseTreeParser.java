@@ -80,7 +80,11 @@ public class HBaseTreeParser extends TreeParser<Filter> {
                 OpNode n = (OpNode) node;
                 Filter childRes = _parse(n);
                 if (isEmpty(childRes)) continue;
-                makeFilter(filterList, childRes);
+                if (op.equals("not")) {
+                    makeFilter(filterList, new NotFilter(childRes));
+                } else {
+                    makeFilter(filterList, childRes);
+                }
             }
         }
         if (isEmpty(filterList))
