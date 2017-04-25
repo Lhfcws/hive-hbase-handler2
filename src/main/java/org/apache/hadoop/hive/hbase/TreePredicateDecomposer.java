@@ -64,6 +64,15 @@ public class TreePredicateDecomposer implements HiveStoragePredicateHandler {
         return null;
     }
 
+    public void unionInFilterList(ScanRangeDummyFilter scanRangeDummyFilter, FilterList filterList) {
+        for (Filter filter : filterList.getFilters()) {
+            if (f instanceof ScanRangeDummyFilter) {
+                originalFilters.remove(f);
+                scanRangeDummyFilter = scanRangeDummyFilter.union((ScanRangeDummyFilter) f);
+            }
+        }
+    }
+
     public HBaseScanRange parseFilter(Filter filter) {
         HBaseScanRange range = new HBaseScanRange();
         if (filter instanceof ScanRangeDummyFilter) {
