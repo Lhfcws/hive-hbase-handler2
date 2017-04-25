@@ -209,13 +209,8 @@ public class HBaseTreeParser extends TreeParser<Filter> {
     private static Filter makeFilter(FilterList filterList, Filter toAdd) {
         if (toAdd == null)
             return filterList;
-        if (toAdd instanceof FilterList) {
-            for (Filter f : ((FilterList) toAdd).getFilters()) {
-                filterList.addFilter(f);
-            }
-        } else {
-            filterList.addFilter(toAdd);
-        }
+
+        filterList.addFilter(toAdd);
         return filterList;
     }
 

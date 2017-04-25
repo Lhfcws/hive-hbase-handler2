@@ -1,6 +1,9 @@
 package org.apache.hadoop.hive.hbase;
 
 import org.apache.hadoop.hbase.filter.Filter;
+import org.apache.hadoop.hbase.filter.FilterList;
+import org.apache.hadoop.hbase.filter.ScanRangeDummyFilter;
+import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
 import org.apache.hadoop.hive.hbase.tree.HiveTreeBuilder;
 import org.apache.hadoop.hive.hbase.tree.hbase.HBaseField;
 import org.apache.hadoop.hive.hbase.tree.hbase.HBaseTreeParser;
@@ -81,6 +84,11 @@ public class TestTreeParser {
 
     @Test
     public void testOr() throws Exception {
+        FakeExprNodeDesc roota = new FakeExprNodeDesc(FakeExprNodeDesc.GENERICFUNC, "boolean", "(update_date <= '2017010100')");
+        FakeExprNodeDesc fieldNode = new FakeExprNodeDesc(FakeExprNodeDesc.COL, "boolean", "update_date");
+        FakeExprNodeDesc valueNode = new FakeExprNodeDesc(FakeExprNodeDesc.CONSTANT, "string", "'2017010100'");
+        roota.addChild(fieldNode, valueNode);
+
         FakeExprNodeDesc root0 = new FakeExprNodeDesc(FakeExprNodeDesc.GENERICFUNC, "boolean", "(update_date >= '2016010100')");
         FakeExprNodeDesc fieldNode0 = new FakeExprNodeDesc(FakeExprNodeDesc.COL, "boolean", "update_date");
         FakeExprNodeDesc valueNode0 = new FakeExprNodeDesc(FakeExprNodeDesc.CONSTANT, "string", "'2016010100'");
@@ -92,12 +100,16 @@ public class TestTreeParser {
         FakeExprNodeDesc valueNode1_2 = new FakeExprNodeDesc(FakeExprNodeDesc.CONSTANT, "string", "'1000000'");
         root1.addChild(fieldNode1, valueNode1, valueNode1_2);
 
-        FakeExprNodeDesc root = new FakeExprNodeDesc(FakeExprNodeDesc.GENERICFUNC, "boolean", "(update_date >= '2016010100') OR (pk between '77777' and '1000000')");
+        FakeExprNodeDesc root = new FakeExprNodeDesc(FakeExprNodeDesc.GENERICFUNC, "boolean", "(update_date >= '2016010100') AND" +
+                " (pk between '77777' and '1000000')");
         root.addChild(root0, root1);
+        FakeExprNodeDesc rootx = new FakeExprNodeDesc(FakeExprNodeDesc.GENERICFUNC, "boolean", "(update_date >= '2016010100') AND" +
+                " (pk between '77777' and '1000000') OR (update_date <= '2017010100')");
+        rootx.addChild(root, roota);
 
         HBaseTreeParser parser = new HBaseTreeParserBuilder().build(mp);
         HiveTreeBuilder builder = new HiveTreeBuilder();
-        OpNode opNode = builder.build(root);
+        OpNode opNode = builder.build(rootx);
         Filter filter = parser.parse(opNode);
         System.out.println(filter);
     }
@@ -123,5 +135,21 @@ public class TestTreeParser {
         OpNode opNode = builder.build(root);
         Filter filter = parser.parse(opNode);
         System.out.println(filter);
+    }
+
+    @Test
+    public void testFilterList() throws Exception {
+        FilterList filterList = new FilterList();
+        FilterList filterList1 = new FilterList(FilterList.Operator.MUST_PASS_ONE);
+        ScanRangeDummyFilter s1 = new ScanRangeDummyFilter(new byte[]{1}, new byte[]{11});
+        ScanRangeDummyFilter s2 = new ScanRangeDummyFilter(new byte[]{1}, new byte[]{11});
+        ScanRangeDummyFilter s3 = new ScanRangeDummyFilter(new byte[]{1}, new byte[]{11});
+        ScanRangeDummyFilter s4 = new ScanRangeDummyFilter(new byte[]{1}, new byte[]{11});
+        filterList1.addFilter(s1);
+        filterList1.addFilter(s2);
+        filterList.addFilter(filterList1);
+        filterList.addFilter(s3);
+        filterList.addFilter(s4);
+        System.out.println(filterList);
     }
 }
