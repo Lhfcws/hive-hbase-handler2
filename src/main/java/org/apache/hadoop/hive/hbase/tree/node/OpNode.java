@@ -16,6 +16,8 @@ public class OpNode extends Node {
     protected boolean scanAllTable = true;
     // 是否 and / or 这类逻辑运算符
     protected boolean isLogicOp = false;
+    // 是否 not
+    protected boolean isNot = false;
     protected transient SargableParser sargableParser = SargableParser.INSTANCE;
 
     public OpNode(String expression, SargableParser sargableParser) {

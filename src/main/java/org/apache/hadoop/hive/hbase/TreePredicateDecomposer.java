@@ -10,6 +10,7 @@ import org.apache.hadoop.hive.hbase.tree.hbase.HBaseSargableParser;
 import org.apache.hadoop.hive.hbase.tree.hbase.HBaseTreeParser;
 import org.apache.hadoop.hive.hbase.tree.hbase.HBaseTreeParserBuilder;
 import org.apache.hadoop.hive.hbase.tree.node.OpNode;
+import org.apache.hadoop.hive.ql.exec.FunctionRegistry;
 import org.apache.hadoop.hive.ql.exec.Utilities;
 import org.apache.hadoop.hive.ql.metadata.HiveStoragePredicateHandler;
 import org.apache.hadoop.hive.ql.plan.ExprNodeDesc;
@@ -52,7 +53,6 @@ public class TreePredicateDecomposer implements HiveStoragePredicateHandler {
 //                decomposedPredicate.pushedPredicateObject = range;
                 jobConf.set(TableScanDesc.FILTER_OBJECT_CONF_STR, Utilities.serializeObject(range));
                 Debugger.print(console, "[PushDown] " + new Gson().toJson(range));
-                Debugger.print(console, "[Filter] " + filter);
             }
         } catch (Exception e) {
             e.printStackTrace();

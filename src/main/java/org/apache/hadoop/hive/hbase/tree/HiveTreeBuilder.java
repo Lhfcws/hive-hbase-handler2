@@ -4,6 +4,7 @@ import org.apache.hadoop.hive.hbase.tree.node.ConstantNode;
 import org.apache.hadoop.hive.hbase.tree.node.FieldNode;
 import org.apache.hadoop.hive.hbase.tree.node.Node;
 import org.apache.hadoop.hive.hbase.tree.node.OpNode;
+import org.apache.hadoop.hive.ql.exec.FunctionRegistry;
 import org.apache.hadoop.hive.ql.plan.ExprNodeDesc;
 
 import java.util.ArrayList;

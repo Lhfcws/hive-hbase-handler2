@@ -68,8 +68,14 @@ public class TestTreeParser {
         FakeExprNodeDesc valueNode1_2 = new FakeExprNodeDesc(FakeExprNodeDesc.CONSTANT, "string", "'1000000'");
         root1.addChild(fieldNode1, valueNode1, valueNode1_2);
 
-        FakeExprNodeDesc root = new FakeExprNodeDesc(FakeExprNodeDesc.GENERICFUNC, "boolean", "(update_date >= '2016010100') AND (pk between '77777' and '1000000')");
-        root.addChild(root0, root1);
+        FakeExprNodeDesc root2 = new FakeExprNodeDesc(FakeExprNodeDesc.GENERICFUNC, "boolean", "(update_date <= '2017010100')");
+        FakeExprNodeDesc fieldNode2 = new FakeExprNodeDesc(FakeExprNodeDesc.COL, "boolean", "update_date");
+        FakeExprNodeDesc valueNode2 = new FakeExprNodeDesc(FakeExprNodeDesc.CONSTANT, "string", "'2017010100'");
+        root0.addChild(fieldNode2, valueNode2);
+
+        FakeExprNodeDesc root = new FakeExprNodeDesc(FakeExprNodeDesc.GENERICFUNC, "boolean", "(update_date >= '2016010100') AND " +
+                "(pk between '77777' and '1000000') AND (update_date <= '2017010100')");
+        root.addChild(root0, root1, root2);
 
         HBaseTreeParser parser = new HBaseTreeParserBuilder().build(mp);
         HiveTreeBuilder builder = new HiveTreeBuilder();
