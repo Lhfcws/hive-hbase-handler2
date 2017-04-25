@@ -12,7 +12,7 @@ public class SargableParser {
     public static final SargableParser INSTANCE = new SargableParser();
 
     public Set<String> sargableOp = new HashSet<>(Arrays.asList(
-            "=", "<", ">", "<=", ">=", "between"
+            "=", "<", ">", "<=", ">=", "between", "is null", "is not null"
     ));
 
     public Map<String, String> sargableOpUDFClassMapping = new HashMap<String, String>();
@@ -52,6 +52,8 @@ public class SargableParser {
         sargableOpUDFClassMapping.put("GenericUDFOPLessThan", "<");
         sargableOpUDFClassMapping.put("GenericUDFOPNotEqual", "!=");
         sargableOpUDFClassMapping.put("GenericUDFBetween", "between");
+        sargableOpUDFClassMapping.put("GenericUDFOPNull", "is null");
+        sargableOpUDFClassMapping.put("GenericUDFOPNotNull", "is not null");
     }
 
     public boolean isRangeOp(String op) {

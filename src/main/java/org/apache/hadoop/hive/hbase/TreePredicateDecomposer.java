@@ -6,6 +6,7 @@ import org.apache.hadoop.hbase.filter.FilterList;
 import org.apache.hadoop.hbase.filter.ScanRangeDummyFilter;
 import org.apache.hadoop.hive.hbase.tree.Debugger;
 import org.apache.hadoop.hive.hbase.tree.HiveTreeBuilder;
+import org.apache.hadoop.hive.hbase.tree.hbase.HBaseSargableParser;
 import org.apache.hadoop.hive.hbase.tree.hbase.HBaseTreeParser;
 import org.apache.hadoop.hive.hbase.tree.hbase.HBaseTreeParserBuilder;
 import org.apache.hadoop.hive.hbase.tree.node.OpNode;
@@ -27,6 +28,8 @@ import java.util.List;
  * @since 2017/3/24
  */
 public class TreePredicateDecomposer implements HiveStoragePredicateHandler {
+    protected static HBaseSargableParser sargableParser = new HBaseSargableParser();
+
     protected SessionState.LogHelper console;
 
     public TreePredicateDecomposer(SessionState.LogHelper console) {
@@ -37,9 +40,10 @@ public class TreePredicateDecomposer implements HiveStoragePredicateHandler {
     public DecomposedPredicate decomposePredicate(JobConf jobConf, Deserializer deserializer, ExprNodeDesc predicate) {
         HBaseSerDe serDe = (HBaseSerDe) deserializer;
 //        DecomposedPredicate decomposedPredicate = new DecomposedPredicate();
+        System.out.println();
 
         try {
-            HiveTreeBuilder treeBuilder = new HiveTreeBuilder();
+            HiveTreeBuilder treeBuilder = new HiveTreeBuilder(sargableParser);
             OpNode root = treeBuilder.build(predicate);
             HBaseTreeParser treeParser = new HBaseTreeParserBuilder().build(serDe);
             Filter filter = treeParser.parse(root);
