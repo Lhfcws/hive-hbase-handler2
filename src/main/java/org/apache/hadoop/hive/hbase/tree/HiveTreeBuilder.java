@@ -78,9 +78,9 @@ public class HiveTreeBuilder {
             for (ExprNodeDesc nodeDesc : hiveNode.getChildren()) {
                 childrenExprs.add(nodeDesc.getExprString());
             }
-            String operator = findParentOp(opNode.getExpression(), childrenExprs);
+//            String operator = findParentOp(opNode.getExpression(), childrenExprs);
 
-//            String operator = findOp(hiveNode);
+            String operator = findOp(hiveNode);
             if (operator != null) {
                 opNode.setOperator(operator);
                 if (sargableParser.isLogicOp(operator)) {
