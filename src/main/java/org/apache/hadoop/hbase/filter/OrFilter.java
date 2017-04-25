@@ -92,6 +92,13 @@ public class OrFilter extends Filter {
     }
 
     @Override
+    public String toString() {
+        return "OrFilter: [" +
+                f1 + ", " + f2 +
+                "]";
+    }
+
+    @Override
     boolean areSerializedFieldsEqual(Filter other) {
         if (other == this) {
             return true;

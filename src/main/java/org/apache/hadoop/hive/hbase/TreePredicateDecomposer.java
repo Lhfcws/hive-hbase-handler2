@@ -46,6 +46,7 @@ public class TreePredicateDecomposer implements HiveStoragePredicateHandler {
         try {
             HiveTreeBuilder treeBuilder = new HiveTreeBuilder(sargableParser);
             OpNode root = treeBuilder.build(predicate);
+            Debugger.print(console, "[ROOT Node] " + new Gson().toJson(root));
             HBaseTreeParser treeParser = new HBaseTreeParserBuilder().build(serDe);
             Filter filter = treeParser.parse(root);
             if (filter != null) {
