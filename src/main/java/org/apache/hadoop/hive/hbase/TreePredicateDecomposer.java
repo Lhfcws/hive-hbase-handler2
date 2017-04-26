@@ -64,7 +64,7 @@ public class TreePredicateDecomposer implements HiveStoragePredicateHandler {
         return null;
     }
 
-    public void unionInFilterList(ScanRangeDummyFilter scanRangeDummyFilter, FilterList filterList) {
+/*    public void unionInFilterList(ScanRangeDummyFilter scanRangeDummyFilter, FilterList filterList) {
         for (Filter f : filterList.getFilters()) {
             if (f instanceof ScanRangeDummyFilter) {
                 scanRangeDummyFilter = scanRangeDummyFilter.union((ScanRangeDummyFilter) f);
@@ -72,27 +72,16 @@ public class TreePredicateDecomposer implements HiveStoragePredicateHandler {
                 unionInFilterList(scanRangeDummyFilter, (FilterList) f);
             }
         }
-    }
+    }*/
 
     public HBaseScanRange parseFilter(Filter filter) {
         HBaseScanRange range = new HBaseScanRange();
-        ScanRangeDummyFilter scanRangeDummyFilter = new ScanRangeDummyFilter(null, null);
-        if (filter instanceof ScanRangeDummyFilter) {
-            scanRangeDummyFilter = scanRangeDummyFilter.union((ScanRangeDummyFilter) filter);
-        } else {
+        if (! (filter instanceof ScanRangeDummyFilter)) {
             try {
                 range.addFilter(filter);
             } catch (Exception e) {
                 console.printError(Debugger.e2s(e));
             }
-            if (filter instanceof FilterList) {
-                unionInFilterList(scanRangeDummyFilter, (FilterList) filter);
-            }
-        }
-
-        if (!scanRangeDummyFilter.isFullScan()) {
-            range.setStartRow(scanRangeDummyFilter.getStartRow());
-            range.setStopRow(scanRangeDummyFilter.getStopRow());
         }
 
         return range;
