@@ -2,6 +2,7 @@ package org.apache.hadoop.hive.hbase;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.hbase.tree.Debugger;
 import org.apache.hadoop.hive.hbase.tree.TreeUtil;
 import org.apache.hadoop.hive.ql.plan.ExprNodeDesc;
@@ -29,6 +30,9 @@ public class HBaseStorageHandler2 extends HBaseStorageHandler {
         Debugger.printExprNodeDesc(console, TreeUtil.ROOT_NAME, predicate);
         // disable cacheblocks in scan, improve performance
         jobConf.set(HBaseSerDe.HBASE_SCAN_CACHEBLOCKS, "false");
+
+        // test snapshot
+        jobConf.set("HIVE_HBASE_SNAPSHOT_NAME", "DS_BANYAN_WEIBO_CONTENT_V1_SNAPSHOT");
 
         // if user has set his own keyfactory, then use it. Otherwise use the sargable one.
         if (jobConf.get(HBaseSerDe.HBASE_COMPOSITE_KEY_FACTORY) != null) {
