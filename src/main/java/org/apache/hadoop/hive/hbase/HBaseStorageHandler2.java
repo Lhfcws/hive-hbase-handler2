@@ -31,9 +31,6 @@ public class HBaseStorageHandler2 extends HBaseStorageHandler {
         // disable cacheblocks in scan, improve performance
         jobConf.set(HBaseSerDe.HBASE_SCAN_CACHEBLOCKS, "false");
 
-        // test snapshot
-        jobConf.set("HIVE_HBASE_SNAPSHOT_NAME", "DS_BANYAN_WEIBO_CONTENT_V1_SNAPSHOT");
-
         // if user has set his own keyfactory, then use it. Otherwise use the sargable one.
         if (jobConf.get(HBaseSerDe.HBASE_COMPOSITE_KEY_FACTORY) != null) {
             HBaseSerDe serDe = (HBaseSerDe) deserializer;
