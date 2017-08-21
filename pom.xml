@@ -11,7 +11,7 @@
   <properties>
     <hive.version>1.2.1</hive.version>
     <hadoop-20S.version>1.2.1</hadoop-20S.version>
-    <hadoop-23.version>2.6.0</hadoop-23.version>
+    <hadoop-23.version>2.7.1</hadoop-23.version>
     <hbase.hadoop1.version>0.98.9-hadoop1</hbase.hadoop1.version>
     <hbase.hadoop2.version>1.1.2</hbase.hadoop2.version>
   </properties>
