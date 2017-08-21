@@ -8,7 +8,6 @@ import java.util.*;
 
 /**
  * org.apache.hadoop.hbase.filter.NotFilter
- * TODO implement a not filter?
  *
  * @author lhfcws
  * @since 2017/3/27
