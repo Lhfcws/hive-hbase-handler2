@@ -2,6 +2,7 @@ package org.apache.hadoop.hive.hbase;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.hbase.tree.Debugger;
 import org.apache.hadoop.hive.hbase.tree.TreeUtil;
 import org.apache.hadoop.hive.ql.plan.ExprNodeDesc;

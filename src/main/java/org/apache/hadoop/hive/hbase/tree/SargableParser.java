@@ -40,6 +40,7 @@ public class SargableParser {
         synonymOps.put("!", "not");
         synonymOps.put("&&", "and");
         synonymOps.put("||", "or");
+        synonymOps.put("rlike", "regex");
 
         sargableOpUDFClassMapping.put("GenericUDFOPAnd", "and");
         sargableOpUDFClassMapping.put("GenericUDFOPOr", "or");

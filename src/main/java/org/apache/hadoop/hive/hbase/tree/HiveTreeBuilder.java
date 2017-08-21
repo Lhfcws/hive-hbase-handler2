@@ -1,10 +1,14 @@
 package org.apache.hadoop.hive.hbase.tree;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.hive.hbase.tree.node.ConstantNode;
 import org.apache.hadoop.hive.hbase.tree.node.FieldNode;
 import org.apache.hadoop.hive.hbase.tree.node.Node;
 import org.apache.hadoop.hive.hbase.tree.node.OpNode;
+import org.apache.hadoop.hive.ql.exec.FunctionRegistry;
 import org.apache.hadoop.hive.ql.plan.ExprNodeDesc;
+import org.apache.hadoop.hive.ql.session.SessionState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +22,8 @@ import java.util.Map;
  * @since 16/7/18
  */
 public class HiveTreeBuilder {
+    protected static Log log = LogFactory.getLog(HiveTreeBuilder.class);
+    protected static SessionState.LogHelper console = new SessionState.LogHelper(log);
 
     protected SargableParser sargableParser;
 
@@ -80,6 +86,7 @@ public class HiveTreeBuilder {
 //            String operator = findParentOp(opNode.getExpression(), childrenExprs);
 
             String operator = findOp(hiveNode);
+
             if (operator != null) {
                 opNode.setOperator(operator);
                 if (sargableParser.isLogicOp(operator)) {

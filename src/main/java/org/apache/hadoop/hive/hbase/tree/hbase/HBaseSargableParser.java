@@ -11,7 +11,12 @@ import org.apache.hadoop.hive.ql.udf.UDFRegExp;
  */
 public class HBaseSargableParser extends SargableParser {
 
+    public HBaseSargableParser() {
+        init();
+    }
+
     @Override
+
     public void init() {
         super.init();
         sargableOp.add(UDFRegExp.class.getSimpleName());
