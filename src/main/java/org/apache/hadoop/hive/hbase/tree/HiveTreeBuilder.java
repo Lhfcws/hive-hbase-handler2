@@ -6,7 +6,6 @@ import org.apache.hadoop.hive.hbase.tree.node.ConstantNode;
 import org.apache.hadoop.hive.hbase.tree.node.FieldNode;
 import org.apache.hadoop.hive.hbase.tree.node.Node;
 import org.apache.hadoop.hive.hbase.tree.node.OpNode;
-import org.apache.hadoop.hive.ql.exec.FunctionRegistry;
 import org.apache.hadoop.hive.ql.plan.ExprNodeDesc;
 import org.apache.hadoop.hive.ql.session.SessionState;
 
@@ -83,8 +82,9 @@ public class HiveTreeBuilder {
             for (ExprNodeDesc nodeDesc : hiveNode.getChildren()) {
                 childrenExprs.add(nodeDesc.getExprString());
             }
-//            String operator = findParentOp(opNode.getExpression(), childrenExprs);
 
+            // findParentOp is usuallly for local test
+//            String operator = findParentOp(opNode.getExpression(), childrenExprs);
             String operator = findOp(hiveNode);
 
             if (operator != null) {
