@@ -84,11 +84,6 @@
           <version>${hbase.hadoop2.version}</version>
           <optional>true</optional>
         </dependency>
-        <dependency>
-          <groupId>org.apache.phoenix</groupId>
-          <artifactId>phoenix-core</artifactId>
-          <version>4.4.0</version>
-        </dependency>
       </dependencies>
     </profile>
   </profiles>
