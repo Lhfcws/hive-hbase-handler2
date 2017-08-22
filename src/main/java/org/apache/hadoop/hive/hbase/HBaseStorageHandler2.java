@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.hbase.tree.Debugger;
 import org.apache.hadoop.hive.hbase.tree.TreeUtil;
 import org.apache.hadoop.hive.metastore.api.MetaException;
@@ -12,6 +13,7 @@ import org.apache.hadoop.hive.ql.plan.ExprNodeDesc;
 import org.apache.hadoop.hive.ql.plan.TableDesc;
 import org.apache.hadoop.hive.ql.session.SessionState;
 import org.apache.hadoop.hive.serde2.Deserializer;
+import org.apache.hadoop.mapred.InputFormat;
 import org.apache.hadoop.mapred.JobConf;
 
 import java.io.IOException;
@@ -74,6 +76,16 @@ public class HBaseStorageHandler2 extends HBaseStorageHandler {
         }
 
         super.configureTableJobProperties(tableDesc, jobProperties);
+    }
+
+    @Override
+    public Class<? extends InputFormat> getInputFormatClass() {
+        if (HiveConf.getVar(this.getJobConf(), HiveConf.ConfVars.HIVE_HBASE_SNAPSHOT_NAME) != null) {
+            log.info("Using HiveHBaseTableSnapshotInputFormat");
+            return HiveHBaseTableSnapshotInputFormat.class;
+        }
+        log.info("Using HiveHBaseTableInputFormat2");
+        return HiveHBaseTableInputFormat2.class;
     }
 
     @Override
