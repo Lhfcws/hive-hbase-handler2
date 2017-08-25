@@ -38,3 +38,6 @@ Put the jar under `${HIVE_HOME}/lib/` .
 ## TODO features:
 1. hive complexed datatype optimized support
 
+
+## Remote install
+curl 
