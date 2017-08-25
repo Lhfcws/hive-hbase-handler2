@@ -40,4 +40,7 @@ Put the jar under `${HIVE_HOME}/lib/` .
 
 
 ## Remote install
+
+~~~bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/Lhfcws/hive-hbase-handler2/master/install.sh)"
+~~~
