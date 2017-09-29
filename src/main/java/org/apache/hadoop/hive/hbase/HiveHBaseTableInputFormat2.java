@@ -17,7 +17,9 @@ public class HiveHBaseTableInputFormat2 extends HiveHBaseTableInputFormat {
     @Override
     public InputSplit[] getSplits(JobConf jobConf, int numSplits) throws IOException {
         LOG.info("[HBASE] " + jobConf.get("hbase.zookeeper.quorum"));
-        return super.getSplits(jobConf, numSplits);
+        LOG.info("[Before pushdown] " + getScan());
+        InputSplit[] inputSplits = super.getSplits(jobConf, numSplits);
+        LOG.info("[After pushdown] " + getScan());
+        return inputSplits;
     }
-
 }
